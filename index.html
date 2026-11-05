@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="nl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tafelapp</title>
+    <style>
+      :root {
+        --bg: #ffffff;
+        --panel: #fbfbfb;
+        --primary: #fefefe;
+        --primary-dark: #000000;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: 'Courier New', monospace;
+        background: var(--bg);
+        color: var(--primary-dark);
+        display: grid;
+        place-items: center;
+      }
+
+      .app {
+        width: min(92vw, 720px);
+        background: var(--panel);
+        border-radius: 18px;
+        padding: 32px 24px;
+      }
+
+      h1 {
+        margin: 0 0 20px;
+        text-align: center;
+        color: var(--primary-dark);
+      }
+
+      .controls {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 24px;
+      }
+
+      label {
+        font-weight: 600;
+      }
+
+      input {
+        width: 110px;
+        padding: 10px 12px;
+        border: 1px solid #000000;
+        border-radius: 10px;
+        font-size: 1rem;
+        outline: none;
+      }
+
+      input:focus {
+        border-color: var(--primary);
+      }
+
+      button {
+        border: 1px solid var(--primary-dark);
+
+        background: var(--primary);
+        color: var(--primary-dark);
+        font-family: 'Courier New', monospace;
+        font-size: 1rem;
+        font-weight: 700;
+        padding: 10px 18px;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: transform 0.15s ease, background 0.15s ease;
+      }
+
+      button:hover {
+        background: var(--primary-dark);
+        transform: translateY(-1px);
+      }
+
+      .table-box {
+        border: 1px solid #000000;
+        border-radius: 14px;
+        padding: 16px;
+        background: var(--primary);
+      }
+
+      .table-title {
+        margin: 0 0 14px;
+        font-size: 1.3rem;
+        color: var(--primary-dark);
+      }
+
+      .results {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 10px;
+      }
+
+      .results li {
+        background: var(--primary);
+        border-radius: 10px;
+        border: 1px solid #000000;
+        padding: 12px 14px;
+        font-weight: 600;
+        text-align: center;
+      }
+
+      .empty {
+        color: var(--muted);
+        text-align: center;
+        padding: 22px 0 8px;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="app">
+      <h1>Tafelapp</h1>
+
+      <div class="controls">
+        <label for="factor">De tafel van:</label>
+        <input id="factor" type="number" min="1" max="20" value="7" />
+        <button id="generateBtn" type="button">Genereren</button>
+      </div>
+
+      <section class="table-box" aria-labelledby="tableTitle">
+        <h2 class="table-title" id="tableTitle"></h2>
+        <ol class="results" id="results" aria-live="polite"></ol>
+      </section>
+
+    <script>
+      const factorInput = document.getElementById('factor');
+      const generateBtn = document.getElementById('generateBtn');
+      const resultsList = document.getElementById('results');
+      const tableTitle = document.getElementById('tableTitle');
+
+      function renderTable() {
+        const factor = Number(factorInput.value) || 1;
+        const safeFactor = Math.min(Math.max(factor, 1), 20);
+        factorInput.value = safeFactor;
+        tableTitle.textContent = '';
+        resultsList.replaceChildren();
+
+        for (let i = 1; i <= 10; i++) {
+          const item = document.createElement('li');
+          item.textContent = `${safeFactor} × ${i} = ${safeFactor * i}`;
+          resultsList.appendChild(item);
+        }
+      }
+
+      generateBtn.addEventListener('click', renderTable);
+      factorInput.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter') {
+          renderTable();
+        }
+      });
+
+      renderTable();
+    </script>
+  </body>
+</html>
